@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload and City Information</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Image Upload and City Information</h1>
+        <form id="upload-form" enctype="multipart/form-data">
+            <input type="file" id="file-input" name="file" accept="image/*">
+            <input type="text" id="city-input" name="city" placeholder="Enter city name">
+            <button type="submit">Submit</button>
+        </form>
+        <div id="result" class="hidden">
+            <div id="image-section" class="hidden">
+                <h2>Uploaded Image</h2>
+                <img id="uploaded-image" src="" alt="Uploaded Image">
+                <h2>Image Metadata</h2>
+                <table id="metadata-table">
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="city-info" class="hidden">
+                <h2>City Information</h2>
+                <p id="city-input-display"></p>
+                <p id="matched-city"></p>
+                <p id="coordinates"></p>
+                <p id="country"></p>
+                <p id="population"></p>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            fetch('/', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                var resultDiv = document.getElementById('result');
+                var imageSection = document.getElementById('image-section');
+                var cityInfo = document.getElementById('city-info');
+                
+                resultDiv.classList.remove('hidden');
+                
+                // Handle image upload results
+                if (data.filename) {
+                    document.getElementById('uploaded-image').src = `/uploads/${data.filename}`;
+                    var tbody = document.querySelector('#metadata-table tbody');
+                    tbody.innerHTML = '';
+                    for (var key in data.metadata) {
+                        var row = tbody.insertRow();
+                        var cell1 = row.insertCell(0);
+                        var cell2 = row.insertCell(1);
+                        cell1.textContent = key;
+                        cell2.textContent = data.metadata[key];
+                    }
+                    imageSection.classList.remove('hidden');
+                } else {
+                    imageSection.classList.add('hidden');
+                }
+                
+                // Handle city information results
+                if (data.city_info) {
+                    document.getElementById('city-input-display').textContent = `Input: ${data.city_info.original_input}`;
+                    document.getElementById('matched-city').textContent = `Matched City: ${data.city_info.city}`;
+                    document.getElementById('coordinates').textContent = `Coordinates: ${data.city_info.lat}, ${data.city_info.lng}`;
+                    document.getElementById('country').textContent = `Country: ${data.city_info.country}`;
+                    document.getElementById('population').textContent = `Population: ${data.city_info.population}`;
+                    cityInfo.classList.remove('hidden');
+                } else {
+                    cityInfo.classList.add('hidden');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
