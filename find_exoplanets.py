@@ -41,7 +41,7 @@ observer_time = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
 # explanation of columns: 
 # https://exoplanetarchive.ipac.caltech.edu/docs/API_PS_columns.html#addtldata
 
-exoplanet_catalog = pd.read_csv('/home/risuri/Downloads/PSCompPars_2024.10.11_05.07.38.csv', comment='#')
+exoplanet_catalog = pd.read_csv('PSCompPars.csv', comment='#')
 # This is required because the Kepler data is too clustered in one area of the sky, creating an unnecessarily big cluster of stars
 #exoplanet_catalog = exoplanet_catalog[exoplanet_catalog['disc_facility'] != 'Kepler']
 ra_center = 285

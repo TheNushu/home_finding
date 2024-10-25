@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>City Information</title>
+    <title>City Information and Exoplanets</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>City Information</h1>
+        <h1>City Information and Visible Exoplanets</h1>
         <form id="city-form">
             <input type="text" id="city-input" name="city" placeholder="Enter city name">
             <button type="submit">Submit</button>
@@ -21,6 +21,10 @@
                 <p id="coordinates"></p>
                 <p id="country"></p>
                 <p id="population"></p>
+            </div>
+            <div id="exoplanet-image" class="hidden">
+                <h2>Visible Exoplanets</h2>
+                <img id="exoplanet-plot" class="fit-image" src="" alt="Visible Exoplanets Plot">
             </div>
         </div>
     </div>
@@ -36,6 +40,7 @@
             .then(data => {
                 var resultDiv = document.getElementById('result');
                 var cityInfo = document.getElementById('city-info');
+                var exoplanetImage = document.getElementById('exoplanet-image');
                 
                 resultDiv.classList.remove('hidden');
                 
@@ -47,8 +52,15 @@
                     document.getElementById('country').textContent = `Country: ${data.city_info.country}`;
                     document.getElementById('population').textContent = `Population: ${data.city_info.population}`;
                     cityInfo.classList.remove('hidden');
+                    
+                    // Display the exoplanet image
+                    if (data.image_filename) {
+                        document.getElementById('exoplanet-plot').src = `/images/${data.image_filename}`;
+                        exoplanetImage.classList.remove('hidden');
+                    }
                 } else {
                     cityInfo.classList.add('hidden');
+                    exoplanetImage.classList.add('hidden');
                 }
             })
             .catch(error => console.error('Error:', error));
