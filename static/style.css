@@ -8,6 +8,26 @@ body {
     background-color: #f4f4f4;
 }
 
+.fit-image {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+#exoplanet-image {
+    width: 100%;
+    max-width: 800px; /* Adjust this value as needed */
+    margin: 0 auto;
+}
+
+#exoplanet-image {
+    width: 100%;
+    max-width: 800px;
+    min-width: 300px; /* Adjust this value as needed */
+    margin: 0 auto;
+}
+
 .container {
     background-color: #fff;
     padding: 30px;
