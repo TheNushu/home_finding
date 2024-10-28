@@ -20,7 +20,6 @@
                 <p id="matched-city"></p>
                 <p id="coordinates"></p>
                 <p id="country"></p>
-                <p id="population"></p>
             </div>
             <div id="exoplanet-image" class="hidden">
                 <h2>Visible Exoplanets</h2>
@@ -50,7 +49,6 @@
                     document.getElementById('matched-city').textContent = `Matched City: ${data.city_info.city}`;
                     document.getElementById('coordinates').textContent = `Coordinates: ${data.city_info.lat}, ${data.city_info.lng}`;
                     document.getElementById('country').textContent = `Country: ${data.city_info.country}`;
-                    document.getElementById('population').textContent = `Population: ${data.city_info.population}`;
                     cityInfo.classList.remove('hidden');
                     
                     // Display the exoplanet image

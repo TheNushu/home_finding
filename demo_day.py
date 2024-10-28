@@ -14,6 +14,8 @@ import os
 
 # Load the merged exoplanets data
 merged_exoplanets = pd.read_csv('merged_exoplanets.csv')
+# Drop rows with missing ra and dec values, since they cannot be plotted
+merged_exoplanets = merged_exoplanets.dropna(subset=['ra', 'dec'])
 
 cities = {
     "Sydney": {"lat": -33.8688, "lon": 151.2093},
@@ -54,13 +56,30 @@ def find_exoplanets_parallel(observer_location, observer_time, df_exoplanets):
     return visible_exoplanets
 
 def plot_visible_exoplanets(visible_exoplanets, city_name):
+
+    closest_10 = visible_exoplanets.nsmallest(10, 'sy_dist')
+
+    for _, planet in closest_10.iterrows():
+        print(planet["pl_name"])
+
     ra_rad = np.radians(visible_exoplanets['ra'].values) - np.pi
     dec_rad = np.radians(visible_exoplanets['dec'].values)
+
+    ra_close = np.radians(closest_10['ra']) - np.pi
+    dec_close = np.radians(closest_10['dec'])
+
     fig = plt.figure(figsize=(10, 5))
     ax = fig.add_subplot(111, projection="mollweide")
 
-    ax.scatter(ra_rad, dec_rad, s=10, color='goldenrod', marker=MarkerStyle(marker='*'), label='Visible exoplanets')
-    ax.set_title(f'Visible Exoplanets in {city_name} now')
+    ax.scatter(ra_rad, dec_rad, s=10,
+               color='goldenrod',
+               marker=MarkerStyle(marker='*'),
+               label='Visible exoplanets')
+    
+    ax.scatter(ra_close, dec_close, s=50, color='red', marker='*', 
+               label='Stars of 10 Closest Habitable Exoplanets')
+
+    ax.set_title(f'Visible solar systems of Livable Exoplanets in {city_name} now')
     ax.set_xlabel('Right Ascension (radians)')
     ax.set_ylabel('Declination (radians)')
     ax.legend()
@@ -75,6 +94,25 @@ def plot_visible_exoplanets(visible_exoplanets, city_name):
     plt.close(fig)
 
     print(f"Image saved as: {image_path}")
+
+def calculate_travel_times(distances_pc, speed_kms):
+    km_per_pc = 3.0857e13  # kilometers per parsec
+    seconds_per_year = 31_557_600  # seconds in a Julian year
+    
+    distances_km = distances_pc * km_per_pc
+    times_seconds = distances_km / speed_kms
+    times_years = times_seconds / seconds_per_year
+    
+    return times_years
+
+speed_of_light_kms = 299_792  # km/s
+speed_kms = 0.25 * speed_of_light_kms  # 25% of the speed of light
+
+#Following code would add column 'travel_time_years' to merged_exoplanets.csv dataframe
+
+#merged_exoplanets['travel_time_years'] = calculate_travel_times(merged_exoplanets['sy_dist'], speed_kms)
+#merged_exoplanets.to_csv('merged_exoplanets.csv', index=False)
+
 
 def main():
 

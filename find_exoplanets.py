@@ -11,6 +11,12 @@ from astropy import units as u
 from datetime import datetime, timezone
 from matplotlib.markers import MarkerStyle
 
+"""
+This code was mainly created in order to achieve the merged_exoplanets.csv
+Currently it servers no purpose in the current implementation, but it has some
+'history' of how we started the project.
+"""
+
 # main flow:
 # 1) get the location and time from the website
 # 2) construct the sky that the observer sees
