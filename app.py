@@ -25,7 +25,6 @@ def get_city_info(city_name):
             'lat': city_row['lat'],
             'lng': city_row['lng'],
             'country': city_row['country'],
-            'population': city_row['population'],
             'original_input': city_name
         }
     return None
