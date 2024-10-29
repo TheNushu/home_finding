@@ -32,7 +32,10 @@ To close the virtual environment, write `exit` in the command line.
 Type the in the text box, the name of the city that you want to see the location of the sky from. Then press submit:
 ![image](https://github.com/user-attachments/assets/98486df0-0249-43a6-b49c-e6b344736b2d)<br>
 After a few seconds you should see a similar result:
-![image](https://github.com/user-attachments/assets/199b9d83-8772-496a-abc5-c2b961bd657f)
+![image](https://github.com/user-attachments/assets/ff5c9481-7b8b-4249-a52c-9384776928a5)
+![image](https://github.com/user-attachments/assets/513eab57-3779-4a7d-848f-f1f7982b3559)
+
+
 
 
 
