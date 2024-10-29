@@ -18,8 +18,6 @@ merged_exoplanets = pd.read_csv('merged_exoplanets.csv')
 merged_exoplanets = merged_exoplanets.dropna(subset=['ra', 'dec'])
 
 cities = {
-    "Sydney": {"lat": -33.8688, "lon": 151.2093},
-    "Helsinki": {"lat": 60.1699, "lon": 24.9384},
     "New York": {"lat": 40.7128, "lon": -74.0060}
 }
 
@@ -113,13 +111,44 @@ speed_kms = 0.25 * speed_of_light_kms  # 25% of the speed of light
 #merged_exoplanets['travel_time_years'] = calculate_travel_times(merged_exoplanets['sy_dist'], speed_kms)
 #merged_exoplanets.to_csv('merged_exoplanets.csv', index=False)
 
+def plot_closest_esi_vs_travel_time(livable_exoplanets, city_name):
+    # Get 10 closest exoplanets
+    closest_10 = livable_exoplanets.nsmallest(10, 'travel_time_years')
+    
+    fig = plt.figure(figsize=(10, 5))
+    ax = fig.add_subplot(111)
+    
+    # Create scatter plot
+    scatter = ax.scatter(closest_10['travel_time_years'], closest_10['esi'], 
+                        s=100, c='blue', alpha=0.6)
+    
+    # Add planet names as annotations
+    for idx, row in closest_10.iterrows():
+        ax.annotate(row['pl_name'], 
+                   (row['travel_time_years'], row['esi']),
+                   xytext=(5, 5), textcoords='offset points')
+    
+    ax.set_title('ESI vs Travel Time for 10 Closest Exoplanets')
+    ax.set_xlabel('Travel Time (years) at 25% Speed of Light')
+    ax.set_ylabel('Earth Similarity Index (ESI)')
+    ax.grid(True)
+    
+    plt.tight_layout()
+    
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    image_path = os.path.join(script_dir, f'closest_esi_vs_travel_time_{city_name}.png')
+    
+    plt.savefig(image_path)
+    plt.close(fig)
+    
+    print(f"Image saved as: {image_path}")
 
 def main():
-
     for city, location in cities.items():
         visible_exoplanets = find_exoplanets_parallel(location, observer_time, merged_exoplanets)
         print(f'Number of visible exoplanets in {city}: {len(visible_exoplanets)}')
         plot_visible_exoplanets(visible_exoplanets, city)
+        plot_closest_esi_vs_travel_time(visible_exoplanets, city)
 
 if __name__=="__main__":
     main()

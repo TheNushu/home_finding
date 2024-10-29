@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify, send_from_directory
 import pandas as pd
 from fuzzywuzzy import process
 import os
-from demo_day import find_exoplanets_parallel, plot_visible_exoplanets
+from demo_day import find_exoplanets_parallel, plot_visible_exoplanets, plot_closest_esi_vs_travel_time
 from datetime import datetime, timezone
 
 app = Flask(__name__)
@@ -48,12 +48,16 @@ def handle_requests():
                 observer_time = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
                 visible_exoplanets = find_exoplanets_parallel(observer_location, observer_time, merged_exoplanets)
                 plot_visible_exoplanets(visible_exoplanets, city_info['city'])
+                plot_closest_esi_vs_travel_time(visible_exoplanets, city_info['city'])
                 
-                image_filename = f'visible_exoplanets_{city_info["city"]}.png'
+                exoplanet_image_path = f'visible_exoplanets_{city_info["city"]}.png'
+                distance_image_path = f'closest_esi_vs_travel_time_{city_info["city"]}.png'
                 
                 return jsonify({
                     'city_info': city_info,
-                    'image_filename': image_filename
+                    'image_filename': exoplanet_image_path,
+                    'distance_image_filename': distance_image_path,
+                    'exoplanet_count': len(visible_exoplanets)
                 })
             else:
                 return jsonify({'error': 'City not found'}), 404

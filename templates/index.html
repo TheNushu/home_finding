@@ -21,9 +21,18 @@
                 <p id="coordinates"></p>
                 <p id="country"></p>
             </div>
+
+            <!-- Exoplanet Image -->
             <div id="exoplanet-image" class="hidden">
                 <h2>Visible Exoplanets</h2>
                 <img id="exoplanet-plot" class="fit-image" src="" alt="Visible Exoplanets Plot">
+                <p id="exoplanet-count"></p>
+            </div>
+            
+            <!-- Distance to Planets Graph -->
+            <div id="distance-image" class="hidden">
+                <h2>Distance to Planets</h2>
+                <img id="distance-plot" class="fit-image" src="" alt="Distance to Planets Plot">
             </div>
         </div>
     </div>
@@ -40,7 +49,8 @@
                 var resultDiv = document.getElementById('result');
                 var cityInfo = document.getElementById('city-info');
                 var exoplanetImage = document.getElementById('exoplanet-image');
-                
+                var distanceImage = document.getElementById('distance-image');
+
                 resultDiv.classList.remove('hidden');
                 
                 // Handle city information results
@@ -54,11 +64,18 @@
                     // Display the exoplanet image
                     if (data.image_filename) {
                         document.getElementById('exoplanet-plot').src = `/images/${data.image_filename}`;
+                        document.getElementById('exoplanet-count').textContent = `Visible Exoplanets: ${data.exoplanet_count}`;
                         exoplanetImage.classList.remove('hidden');
+                    }
+                    
+                    if (data.distance_image_filename) {
+                        document.getElementById('distance-plot').src = `/images/${data.distance_image_filename}`;
+                        distanceImage.classList.remove('hidden');
                     }
                 } else {
                     cityInfo.classList.add('hidden');
                     exoplanetImage.classList.add('hidden');
+                    distanceImage.classList.add('hidden');
                 }
             })
             .catch(error => console.error('Error:', error));
